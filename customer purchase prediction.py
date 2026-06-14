@@ -14,10 +14,9 @@ Ad. Sale Prediction from Existing customer - Logistic Regression
 import pandas as pd
 import numpy as np
 
-"""### *Choose Dataset file from Local Directory*"""
 
-from google.colab import files
-uploaded = files.upload()
+"""### *Choose Dataset file from Local Directory*"""
+# Dataset file is already present in the repository (DigitalAd_dataset.csv).
 
 """### *Load Dataset*"""
 
@@ -49,12 +48,13 @@ from sklearn.preprocessing import StandardScaler
 sc = StandardScaler()
 X_train = sc.fit_transform(X_train)
 X_test = sc.transform(X_test)
-
-"""###*Training*"""
-
 from sklearn.linear_model import LogisticRegression
-model = LogisticRegression(random_state = 0)
+model = LogisticRegression(random_state=0)
 model.fit(X_train, y_train)
+# Save model and scaler for later use
+from joblib import dump
+dump(model, 'logreg_model.joblib')
+dump(sc, 'scaler.joblib')
 
 """### *Predicting, wheather new customer with Age & Salary will Buy or Not*
 
@@ -73,13 +73,4 @@ print("Confusion Matrix: ")
 print(cm)
 
 print("Accuracy of the Model: {0}%".format(accuracy_score(y_test, y_pred)*100))
-
-age = int(input("Enter New Customer Age: "))
-sal = int(input("Enter New Customer Salary: "))
-newCust = [[age,sal]]
-result = model.predict(sc.transform(newCust))
-print(result)
-if result == 1:
-  print("Customer will Buy")
-else:
-  print("Customer won't Buy")
+# Inference moved to separate script; user input handled there.
